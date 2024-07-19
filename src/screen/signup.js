@@ -1,6 +1,7 @@
-import { Image, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import auth from '@react-native-firebase/auth'
 
 const Signup = ({ navigation }) => {
     const [email, setEmail] = useState("");
@@ -9,6 +10,50 @@ const Signup = ({ navigation }) => {
 
     const handleBack = () => {
         navigation.goBack();
+    }
+
+    const addToJsonServer = (user) => {
+        fetch('http://10.0.2.2:3000/userManager', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: user.uid,
+                email: email,
+                password: password
+            })
+        })
+    }
+
+    const handleSignup = () => {
+        if (confirmPassword == password) {
+            auth()
+                .createUserWithEmailAndPassword(email, password)
+                .then(async (userCredential) => {
+                    console.log(123);
+
+                    const user = userCredential.user;
+                    addToJsonServer(user);
+
+                    Alert.alert('Đã tạo tài khoản thành công!');
+                })
+                .catch(error => {
+                    console.log(error);
+                    if (error.code === 'auth/email-already-in-use') {
+                        Alert.alert('Email đã tồn tại!');
+                    } else if (error.code === 'auth/invalid-email') {
+                        Alert.alert('Email không hợp lệ!')
+                    } else {
+                        Alert.alert('Đã xảy ra lỗi. Vui lòng thử lại sau!' + error.message);
+                    }
+
+                    console.log(error)
+                })
+        } else {
+            Alert.alert('Mật khẩu xác nhận không khớp với mật khẩu !')
+        }
+
     }
 
 
@@ -20,24 +65,25 @@ const Signup = ({ navigation }) => {
                 </TouchableOpacity>
                 <Image style={styles.img} resizeMode='contain' source={require('../image//logo.png')} />
                 <TextInput style={styles.tinput} placeholder='Email' onChangeText={setEmail} value={email} />
-                <TextInput style={styles.tinput} placeholder='Password' onChangeText={setPassword} value={password} secureTextEntry={true} />
-                <TextInput style={styles.tinput} placeholder='Confirm Password' onChangeText={setConfirmPassword} value={confirmPassword} secureTextEntry={true} />
+                <TextInput style={styles.tinput} placeholder='Mật khẩu' onChangeText={setPassword} value={password} secureTextEntry={true} />
+                <TextInput style={styles.tinput} placeholder='Mật khẩu xác nhận' onChangeText={setConfirmPassword} value={confirmPassword} secureTextEntry={true} />
                 <View>
-                    <TouchableOpacity style={styles.btn}>
+                    <TouchableOpacity onPress={handleSignup} style={styles.btn}>
                         <View style={styles.custombtn}>
-                            <Text style={styles.txt}>SIGN UP</Text>
+                            <Text style={styles.txt}>ĐĂNG KÝ</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
                 <View style={{ width: '100%', position: 'relative', top: 150 }}>
                     <View style={styles.line} />
                     <View style={{ flexDirection: 'row', marginTop: 30, justifyContent: 'center' }}>
-                        <Text style={{ fontSize: 15 }}>If you already have an account</Text>
+                        <Text style={{ fontSize: 15 }}>Nếu bạn đã có tài khoản</Text>
                         <TouchableOpacity onPress={handleBack}>
-                            <Text style={{ color: '#FFFFFF', marginLeft: 5, fontWeight: 'bold', fontSize: 15 }}>Log in</Text>
+                            <Text style={{ color: '#FFFFFF', marginLeft: 5, fontWeight: 'bold', fontSize: 15 }}>Đăng Nhập</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
+
 
             </ImageBackground>
         </View>

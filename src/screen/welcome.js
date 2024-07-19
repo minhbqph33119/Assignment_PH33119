@@ -32,7 +32,7 @@ const Welcome = ({ navigation }) => {
             <ImageBackground style={styles.bground} source={require('../image/imgbackgroundd.png')} resizeMode='stretch'>
                 <TouchableOpacity style={styles.btn} onPress={handleNav}>
                     <View style={styles.custombtn}>
-                        <Text style={styles.txt}>LOG IN </Text>
+                        <Text style={styles.txt}>ĐĂNG NHẬP</Text>
                         <AntDesign name="caretright" size={19} />
                     </View>
                 </TouchableOpacity>
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 50,
         alignSelf: 'center',
-        width: 200,
+        width: 300,
         backgroundColor: '#C2FFF3',
         padding: 15,
         borderRadius: 30

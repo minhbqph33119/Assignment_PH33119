@@ -1,0 +1,23 @@
+{
+  "spiritManager": [
+    {
+      "id": "1",
+      "content": "Minh",
+      "userId": "1",
+      "date": "22/02/2004"
+    }
+  ],
+  "userManager": [
+    {
+      "id": "1",
+      "name": "Minh",
+      "age": 20,
+      "student": "PH33119",
+      "sex": "female",
+      "height": 175,
+      "weight": 62,
+      "email": "bminh248@gmail.com",
+      "password": "2202"
+    }
+  ]
+}
