@@ -1,4 +1,4 @@
-import { Image, ImageBackground, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, ImageBackground, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import auth from '@react-native-firebase/auth'
@@ -21,7 +21,8 @@ const Login = ({ navigation }) => {
         const unsubscribe = auth().onAuthStateChanged((user) => {
             if (user) {
                 setInitializing(true);
-                navigation.navigate('Home');
+                Alert.alert("Đăng nhập thành công!")
+                navigation.navigate('BottomAppBar');
             } else {
                 setInitializing(false);
             }
@@ -66,17 +67,23 @@ const Login = ({ navigation }) => {
             .signInWithEmailAndPassword(email, password)
             .then(() => {
                 console.log('Đã đăng nhập!');
-                navigation.navigate('Home');
+                setEmail('');
+                setPassword('');
+                navigation.navigate('BottomAppBar');
             })
             .catch(error => {
-                if (error.code === 'auth/email-already-in-use') {
-                    console.log('Email đã được sử dụng!');
+                console.log('Login error:', error);
+                if (error.code === 'auth/user-not-found') {
+                    setEmailError("Tài khoản không tồn tại");
                 }
                 if (error.code === 'auth/invalid-email') {
                     setEmailError("Email không hợp lệ!");
                 }
                 if (error.code === 'auth/wrong-password') {
                     setPasswordError("Sai mật khẩu!");
+                }
+                if (error.code === 'auth/too-many-requests') {
+                    setPasswordError("Quá nhiều lần thử. Vui lòng thử lại sau.");
                 }
 
                 console.log(error);
@@ -95,7 +102,12 @@ const Login = ({ navigation }) => {
             .signInWithCredential(googleCredential)
             .then(() => {
                 console.log('Đã đăng nhập bằng Google!');
-                navigation.navigate('Home');
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 1,
+                        routes: [{ name: 'BottomAppBar' }],
+                    })
+                );
             });
     }
 

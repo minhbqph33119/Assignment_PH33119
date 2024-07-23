@@ -1,12 +1,18 @@
 import { Alert, Image, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import Ionicons from 'react-native-vector-icons/Ionicons'; // Import Ionicons
 import auth from '@react-native-firebase/auth'
 
 const Signup = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+    const [confirmPasswordError, setConfirmPasswordError] = useState("");
+    const [secureTextEntry, setSecureTextEntry] = useState(true);
+    const [secureConfirmTextEntry, setSecureConfirmTextEntry] = useState(true);
 
     const handleBack = () => {
         navigation.goBack();
@@ -26,36 +32,104 @@ const Signup = ({ navigation }) => {
         })
     }
 
-    const handleSignup = () => {
-        if (confirmPassword == password) {
+    const validateEmail = async (inputEmail) => {
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (!inputEmail) {
+            return "Email không được bỏ trống";
+        } else if (!emailRegex.test(inputEmail)) {
+            return "Email không hợp lệ";
+        }
+
+        try {
+            const signInMethods = await auth().fetchSignInMethodsForEmail(inputEmail);
+            if (signInMethods.length > 0) {
+                return "Email đã tồn tại";
+            }
+        } catch (error) {
+            if (error.code === 'auth/invalid-email') {
+                return "Email không hợp lệ";
+            } else {
+                return "Đã xảy ra lỗi. Vui lòng thử lại sau!";
+            }
+        }
+
+        return "";
+    }
+
+    const validatePasswords = () => {
+        const minLength = 8;
+        const hasLowercase = /[a-z]/;
+        const hasUppercase = /[A-Z]/;
+        const hasDigit = /\d/;
+
+        if (!password) {
+            return "Mật khẩu không được bỏ trống";
+        } else if (password.length < minLength) {
+            return `Mật khẩu phải có ít nhất ${minLength} ký tự`;
+        } else if (!hasLowercase.test(password)) {
+            return "Mật khẩu phải có ít nhất một chữ cái thường";
+        } else if (!hasUppercase.test(password)) {
+            return "Mật khẩu phải có ít nhất một chữ cái hoa";
+        } else if (!hasDigit.test(password)) {
+            return "Mật khẩu phải có ít nhất một chữ số";
+        }
+
+        if (!confirmPassword) {
+            return "Mật khẩu xác nhận không được bỏ trống";
+        } else if (confirmPassword !== password) {
+            return "Mật khẩu xác nhận không khớp với mật khẩu";
+        }
+
+        return "";
+    }
+
+    const handleSignup = async () => {
+        let isValid = true;
+
+        const emailError = await validateEmail(email);
+        const passwordError = validatePasswords();
+
+        if (emailError) {
+            setEmailError(emailError);
+            isValid = false;
+        } else {
+            setEmailError("");
+        }
+
+        if (passwordError) {
+            setPasswordError(passwordError);
+            setConfirmPasswordError(passwordError);
+            isValid = false;
+        } else {
+            setPasswordError("");
+            setConfirmPasswordError("");
+        }
+
+        if (isValid) {
             auth()
                 .createUserWithEmailAndPassword(email, password)
                 .then(async (userCredential) => {
-                    console.log(123);
-
+                    console.log('Đăng ký thành công!');
+                    setEmail('');
+                    setPassword('');
+                    setConfirmPassword('');
                     const user = userCredential.user;
                     addToJsonServer(user);
 
                     Alert.alert('Đã tạo tài khoản thành công!');
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.log('Lỗi đăng ký:', error);
                     if (error.code === 'auth/email-already-in-use') {
                         Alert.alert('Email đã tồn tại!');
                     } else if (error.code === 'auth/invalid-email') {
-                        Alert.alert('Email không hợp lệ!')
+                        Alert.alert('Email không hợp lệ!');
                     } else {
                         Alert.alert('Đã xảy ra lỗi. Vui lòng thử lại sau!' + error.message);
                     }
-
-                    console.log(error)
-                })
-        } else {
-            Alert.alert('Mật khẩu xác nhận không khớp với mật khẩu !')
+                });
         }
-
     }
-
 
     return (
         <View style={styles.container}>
@@ -63,10 +137,60 @@ const Signup = ({ navigation }) => {
                 <TouchableOpacity onPress={handleBack} style={{ position: 'absolute', top: 20, left: 10 }}>
                     <AntDesign name='left' size={30} color='#ffffff' />
                 </TouchableOpacity>
-                <Image style={styles.img} resizeMode='contain' source={require('../image//logo.png')} />
-                <TextInput style={styles.tinput} placeholder='Email' onChangeText={setEmail} value={email} />
-                <TextInput style={styles.tinput} placeholder='Mật khẩu' onChangeText={setPassword} value={password} secureTextEntry={true} />
-                <TextInput style={styles.tinput} placeholder='Mật khẩu xác nhận' onChangeText={setConfirmPassword} value={confirmPassword} secureTextEntry={true} />
+                <Image style={styles.img} resizeMode='contain' source={require('../image/logo.png')} />
+                <TextInput
+                    style={[styles.tinput, emailError ? styles.errorInput : null]}
+                    placeholder='Email'
+                    onChangeText={text => {
+                        setEmail(text);
+                        setEmailError("");
+                        validateEmail(text).then(error => setEmailError(error));
+                    }}
+                    value={email}
+                />
+                {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+                <View style={[styles.passwordContainer, passwordError ? styles.errorInput : null]}>
+                    <TextInput
+                        style={styles.tinputPassword}
+                        placeholder='Mật khẩu'
+                        onChangeText={text => {
+                            setPassword(text);
+                            if (passwordError) setPasswordError("");
+                            validatePasswords();
+                        }}
+                        value={password}
+                        secureTextEntry={secureTextEntry}
+                    />
+                    <TouchableOpacity style={{ position: 'absolute', right: 15 }} onPress={() => setSecureTextEntry(!secureTextEntry)}>
+                        <Ionicons
+                            name={secureTextEntry ? "eye-off" : "eye"}
+                            size={20}
+                            color="grey"
+                        />
+                    </TouchableOpacity>
+                </View>
+                {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+                <View style={[styles.passwordContainer, confirmPasswordError ? styles.errorInput : null]}>
+                    <TextInput
+                        style={styles.tinputPassword}
+                        placeholder='Mật khẩu xác nhận'
+                        onChangeText={text => {
+                            setConfirmPassword(text);
+                            if (confirmPasswordError) setConfirmPasswordError("");
+                            validatePasswords();
+                        }}
+                        value={confirmPassword}
+                        secureTextEntry={secureConfirmTextEntry}
+                    />
+                    <TouchableOpacity style={{ position: 'absolute', right: 15 }} onPress={() => setSecureConfirmTextEntry(!secureConfirmTextEntry)}>
+                        <Ionicons
+                            name={secureConfirmTextEntry ? "eye-off" : "eye"}
+                            size={20}
+                            color="grey"
+                        />
+                    </TouchableOpacity>
+                </View>
+                {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
                 <View>
                     <TouchableOpacity onPress={handleSignup} style={styles.btn}>
                         <View style={styles.custombtn}>
@@ -74,17 +198,6 @@ const Signup = ({ navigation }) => {
                         </View>
                     </TouchableOpacity>
                 </View>
-                <View style={{ width: '100%', position: 'relative', top: 150 }}>
-                    <View style={styles.line} />
-                    <View style={{ flexDirection: 'row', marginTop: 30, justifyContent: 'center' }}>
-                        <Text style={{ fontSize: 15 }}>Nếu bạn đã có tài khoản</Text>
-                        <TouchableOpacity onPress={handleBack}>
-                            <Text style={{ color: '#FFFFFF', marginLeft: 5, fontWeight: 'bold', fontSize: 15 }}>Đăng Nhập</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-
-
             </ImageBackground>
         </View>
     )
@@ -113,6 +226,23 @@ const styles = StyleSheet.create({
         marginTop: 10,
         padding: 10
     },
+    tinputPassword: {
+        backgroundColor: '#ffffff',
+        flex: 1,
+        borderRadius: 30,
+        padding: 10,
+        marginRight: 10
+    },
+    passwordContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'center',
+        width: '90%',
+        marginTop: 10,
+        padding: 1,
+        backgroundColor: '#ffffff',
+        borderRadius: 30
+    },
     btn: {
         marginTop: 50,
         alignSelf: 'center',
@@ -135,5 +265,14 @@ const styles = StyleSheet.create({
         width: '100%',
         borderBottomWidth: 1,
         borderBottomColor: '#FFFFFF'
+    },
+    errorInput: {
+        borderColor: 'red',
+        borderWidth: 1,
+    },
+    errorText: {
+        color: 'red',
+        marginHorizontal: 25,
+        marginTop: 5,
     }
-})
+});
