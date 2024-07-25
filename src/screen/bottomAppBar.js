@@ -100,8 +100,8 @@ const BottomAppBar = () => {
                         case 'Exercise':
                             iconName = focused ? 'barbell' : 'barbell-outline';
                             break;
-                        case 'Setting':
-                            iconName = focused ? 'settings' : 'settings-outline';
+                        case 'Person':
+                            iconName = focused ? 'person' : 'person-outline';
                             break;
                         default:
                             iconName = 'help-circle-outline';
@@ -126,7 +126,7 @@ const BottomAppBar = () => {
             <Tab.Screen name="Spirit" component={SpiritStack} />
             <Tab.Screen name="Health" component={HealthStack} />
             <Tab.Screen name="Exercise" component={ExerciseStack} />
-            <Tab.Screen name="Setting" component={SettingStack} />
+            <Tab.Screen name="Person" component={SettingStack} />
         </Tab.Navigator>
     );
 }

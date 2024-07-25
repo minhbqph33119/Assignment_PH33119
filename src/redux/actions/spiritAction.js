@@ -1,16 +1,18 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { addSpirit } from "../reducers/spiritReducer";
+import { addSpirit, clearSpirit } from "../reducers/spiritReducer";
 
 const api_url = 'http://10.0.2.2:3000/spiritManager';
 
-export const fetchSpirit = () => {
+export const fetchSpirit = (uid) => {
     return async dispatch => {
         try {
-            const response = await fetch(api_url);
+            const response = await fetch(`${api_url}?userid=${uid}`);
             const data = await response.json();
+            dispatch(clearSpirit())
             data.forEach(row => {
                 dispatch(addSpirit(row));
             });
+            console.log(data);
         } catch (error) {
             console.log(error);
         }

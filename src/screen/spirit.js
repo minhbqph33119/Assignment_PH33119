@@ -130,7 +130,8 @@ const Spirit = () => {
     );
 
     useEffect(() => {
-        dispatch(fetchSpirit());
+        console.log(userid.uid);
+        dispatch(fetchSpirit(userid.uid));
     }, [dispatch]);
 
     return (

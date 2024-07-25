@@ -11,6 +11,9 @@ const spiritSlice = createSlice({
     reducers: {
         addSpirit(state, action) {
             state.listSpirit.push(action.payload);
+        },
+        clearSpirit(state, action) {
+            state.listSpirit.length = 0;
         }
     },
     extraReducers: builder => {
@@ -35,5 +38,5 @@ const spiritSlice = createSlice({
     }
 });
 
-export const { addSpirit } = spiritSlice.actions;
+export const { addSpirit, clearSpirit } = spiritSlice.actions;
 export default spiritSlice.reducer;
