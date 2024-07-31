@@ -106,7 +106,6 @@ const Spirit = () => {
     };
 
     const handleItemPress = useCallback((item) => {
-        // Nếu đang ở chế độ chỉnh sửa, đóng modal chỉnh sửa
         if (idEdit) {
             setIdEdit("");
             setEditTitle("");

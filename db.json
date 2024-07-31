@@ -1,44 +1,23 @@
 {
   "spiritManager": [
     {
-      "id": "c8b8",
-      "userid": "4F2SwevSTwetK11xBPEjunbXF8f2",
-      "date": "25-7-2024",
-      "title": "1",
-      "content": "1\n1\n1\n1\n1"
+      "id": "5be4",
+      "userid": "k0hXrSQxTtc7ZcYOSnaVyB7jAS13",
+      "date": "31-7-2024",
+      "title": "hello",
+      "content": "1.minh\n2.ph33119\n3.0344722204\n4.001204027521\n5.22/02/2004\n6.hihihihihihi\n7.minhbui\n8.buiquangminh"
     }
   ],
   "userManager": [
     {
-      "id": "1",
-      "name": "Minh",
-      "age": 20,
-      "sex": "female",
-      "height": 175,
-      "weight": 62,
+      "id": "k0hXrSQxTtc7ZcYOSnaVyB7jAS13",
       "email": "bminh248@gmail.com",
-      "password": "Minh1234"
-    },
-    {
-      "id": "0T8xhKRtETYWweqYYK5xxkOhuSl1",
-      "email": "minhmeo@gmail.com",
       "password": "Minh1234",
-      "weight": 63
-    },
-    {
-      "id": "4F2SwevSTwetK11xBPEjunbXF8f2",
-      "email": "minh@gmail.com",
-      "password": "Minh1234"
-    },
-    {
-      "id": "1hfI6qupwEflAYRWhPbIeYtkNO22",
-      "email": "hihi@gmail.com",
-      "password": "Hihi1234"
-    },
-    {
-      "id": "FTpdemLT1pQQu4W4eRGNtfHb7g22",
-      "email": "fpt@gmail.com",
-      "password": "Minh1234"
+      "name": "minh",
+      "age": "19",
+      "gender": "male",
+      "height": "160",
+      "weight": "90"
     }
   ]
 }
