@@ -115,8 +115,6 @@ const Signup = ({ navigation }) => {
                     setConfirmPassword('');
                     const user = userCredential.user;
                     addToJsonServer(user);
-
-                    Alert.alert('Đã tạo tài khoản thành công!');
                 })
                 .catch(error => {
                     console.log('Lỗi đăng ký:', error);

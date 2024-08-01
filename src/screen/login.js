@@ -1,4 +1,4 @@
-import { Alert, Image, ImageBackground, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, ImageBackground, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import auth from '@react-native-firebase/auth'
@@ -21,7 +21,6 @@ const Login = ({ navigation }) => {
         const unsubscribe = auth().onAuthStateChanged((user) => {
             if (user) {
                 setInitializing(true);
-                Alert.alert("Đăng nhập thành công!")
                 navigation.navigate('BottomAppBar');
             } else {
                 setInitializing(false);

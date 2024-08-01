@@ -6,6 +6,13 @@
       "date": "31-7-2024",
       "title": "hello",
       "content": "1.minh\n2.ph33119\n3.0344722204\n4.001204027521\n5.22/02/2004\n6.hihihihihihi\n7.minhbui\n8.buiquangminh"
+    },
+    {
+      "id": "b693",
+      "userid": "FCtfwnB5IRN05SYVblE828DneMl2",
+      "date": "1-8-2024",
+      "title": "ads",
+      "content": "1\n2\n3"
     }
   ],
   "userManager": [
@@ -18,6 +25,16 @@
       "gender": "male",
       "height": "160",
       "weight": "90"
+    },
+    {
+      "id": "FCtfwnB5IRN05SYVblE828DneMl2",
+      "email": "thang@gmail.com",
+      "password": "Thang123",
+      "name": "thang",
+      "age": "19",
+      "gender": "female",
+      "height": "157",
+      "weight": "56"
     }
   ]
 }

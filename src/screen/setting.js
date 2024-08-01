@@ -1,4 +1,4 @@
-import { Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -108,15 +108,12 @@ const Setting = () => {
                 weight,
             }))
                 .then(() => {
-                    Alert.alert("Thông báo", "Cập nhật thông tin thành công!");
                     setIsEditing(false);
                 })
                 .catch(error => {
-                    Alert.alert("Lỗi", "Có lỗi xảy ra khi cập nhật thông tin.");
                     console.error(error);
                 });
         } else {
-            Alert.alert("Thông báo", "Vui lòng điền đầy đủ thông tin!");
         }
     };
 
@@ -263,7 +260,7 @@ const Setting = () => {
                                                 setHeight(text);
                                                 setErrors({ ...errors, height: "" });
                                             }}
-                                            placeholder='Chiều cao'
+                                            placeholder='Chiều cao (cm)'
                                             keyboardType='numeric'
                                         />
                                         {errors.height ? <Text style={styles.errorText}>{errors.height}</Text> : null}
@@ -275,7 +272,7 @@ const Setting = () => {
                                                 setWeight(text);
                                                 setErrors({ ...errors, weight: "" });
                                             }}
-                                            placeholder='Cân nặng'
+                                            placeholder='Cân nặng (kg)'
                                             keyboardType='numeric'
                                         />
                                         {errors.weight ? <Text style={styles.errorText}>{errors.weight}</Text> : null}
@@ -386,7 +383,6 @@ const styles = StyleSheet.create({
     },
     modal: {
         width: 350,
-        height: 600,
         backgroundColor: '#C2FFF3',
         padding: 20,
         borderRadius: 20,
@@ -401,15 +397,16 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start'
     },
     saveButton: {
-        backgroundColor: 'green',
-        borderRadius: 30,
-        marginTop: 20,
-        paddingVertical: 10,
-        paddingHorizontal: 20,
+        width: 150,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'black',
+        marginTop: 20
     },
     saveButtonText: {
-        color: 'white',
+        color: '#C2FFF3',
         fontSize: 18,
         fontWeight: 'bold',
     },
